@@ -45,6 +45,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final _paper = PaperWidget();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -52,6 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(choices[0].icon),
+            onPressed: () {
+              _select(context, choices[0]);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -61,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               divisions: 1,
               subdivisions: 1,
               interval: 20,
-              child: PaperWidget(),
+              child: _paper,
             ),
           ),
         ],
@@ -69,5 +80,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _select(BuildContext context, Choice choice) {
+    // Causes the app to rebuild with the new _selectedChoice.
+    setState(() {
+      // clear paper
+      print("CLEAR");
+      _paper.clear();
+    });
+  }
+
   void _addPage() {}
 }
+
+class Choice {
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'New', icon: Icons.clear),
+];

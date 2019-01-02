@@ -20,7 +20,13 @@ class PaperPainter extends CustomPainter {
 }
 
 class PaperWidget extends StatefulWidget {
-  PaperWidgetState createState() => new PaperWidgetState();
+  final _state = PaperWidgetState();
+
+  PaperWidgetState createState() => _state;
+
+  void clear() {
+    _state.clear();
+  }
 }
 
 class PaperWidgetState extends State<PaperWidget> {
@@ -34,12 +40,18 @@ class PaperWidgetState extends State<PaperWidget> {
             referenceBox.globalToLocal(details.globalPosition);
         //print("point $localPosition");
         setState(() {
-          _points = new List.from(_points)..add(localPosition);
+          _points = List.from(_points)..add(localPosition);
         });
       },
       onPanEnd: (DragEndDetails details) => _points.add(null),
       child:
           CustomPaint(painter: new PaperPainter(_points), size: Size.infinite),
     );
+  }
+
+  void clear() {
+    setState(() {
+      _points = List();
+    });
   }
 }
