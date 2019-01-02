@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sketchnotes_flutter/widgets/paper_widget.dart';
 
 void main() => runApp(new MyApp());
 
@@ -56,12 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Expanded(
             child: GridPaper(
-              color: Colors.red,
+              color: Colors.blue,
+              divisions: 1,
               subdivisions: 1,
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                child: FlutterLogo(),
-              ),
+              interval: 20,
+              child: PaperWidget(),
             ),
           ),
         ],
