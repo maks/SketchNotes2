@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PaperPainter extends CustomPainter {
-  PaperPainter(this.points);
+  PaperPainter(this.points, this.color);
 
   final List<Offset> points;
+  final Color color;
 
   void paint(Canvas canvas, Size size) {
     Paint paint = new Paint()
-      ..color = Colors.black
+      ..color = color
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 5.0;
     for (int i = 0; i < points.length - 1; i++) {
@@ -27,10 +28,15 @@ class PaperWidget extends StatefulWidget {
   void clear() {
     _state.clear();
   }
+
+  void penColor(Color color) {
+     _state._penColor = color;
+  }
 }
 
 class PaperWidgetState extends State<PaperWidget> {
   List<Offset> _points = <Offset>[];
+  Color _penColor = Colors.black;
 
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -45,7 +51,7 @@ class PaperWidgetState extends State<PaperWidget> {
       },
       onPanEnd: (DragEndDetails details) => _points.add(null),
       child:
-          CustomPaint(painter: new PaperPainter(_points), size: Size.infinite),
+          CustomPaint(painter: new PaperPainter(_points, _penColor), size: Size.infinite),
     );
   }
 
