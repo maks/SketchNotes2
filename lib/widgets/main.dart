@@ -4,7 +4,6 @@ import 'package:sketchnotes_flutter/widgets/paper_widget.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _select(BuildContext context, Choice choice) {
-    // Causes the app to rebuild with the new _selectedChoice.
     setState(() {
       // clear paper
       print("CLEAR");
