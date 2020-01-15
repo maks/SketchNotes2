@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:built_collection/built_collection.dart';
+import 'package:provider/provider.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:sketchnotes2/dialogs/width_dialog.dart';
@@ -42,7 +43,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<PainterBloc>(context);
+    final bloc = Provider.of<PainterBloc>(context);
 
     return Scaffold(
       body: Container(
