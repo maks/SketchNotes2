@@ -1,9 +1,9 @@
 import 'package:test/test.dart';
-import 'package:drawapp/bloc/painter_bloc.dart';
-import 'package:drawapp/models/color.dart';
-import 'package:drawapp/models/end_touch.dart';
-import 'package:drawapp/models/touch_location.dart';
-import 'package:drawapp/models/stroke_width.dart';
+import 'package:sketchnotes2/bloc/painter_bloc.dart';
+import 'package:sketchnotes2/models/color.dart';
+import 'package:sketchnotes2/models/end_touch.dart';
+import 'package:sketchnotes2/models/touch_location.dart';
+import 'package:sketchnotes2/models/stroke_width.dart';
 
 void main() {
   test('Simple stroke', () {

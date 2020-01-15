@@ -1,15 +1,15 @@
 import 'dart:math' as math;
 import 'package:built_collection/built_collection.dart';
-import 'package:drawapp/bloc/painter_bloc.dart';
-import 'package:drawapp/dialogs/color_dialog.dart';
-import 'package:drawapp/dialogs/width_dialog.dart';
-import 'package:drawapp/models/clear.dart';
-import 'package:drawapp/models/color.dart';
-import 'package:drawapp/models/end_touch.dart';
-import 'package:drawapp/models/stroke.dart';
-import 'package:drawapp/models/stroke_width.dart';
-import 'package:drawapp/models/touch_location.dart';
-import 'package:drawapp/strokes_painter.dart';
+import 'package:sketchnotes2/bloc/painter_bloc.dart';
+import 'package:sketchnotes2/dialogs/color_dialog.dart';
+import 'package:sketchnotes2/dialogs/width_dialog.dart';
+import 'package:sketchnotes2/models/clear.dart';
+import 'package:sketchnotes2/models/color.dart';
+import 'package:sketchnotes2/models/end_touch.dart';
+import 'package:sketchnotes2/models/stroke.dart';
+import 'package:sketchnotes2/models/stroke_width.dart';
+import 'package:sketchnotes2/models/touch_location.dart';
+import 'package:sketchnotes2/strokes_painter.dart';
 import 'package:flutter/material.dart';
 
 class DrawPage extends StatefulWidget {

@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:drawapp/app.dart';
+import 'package:sketchnotes2/app.dart';
 import './color_dialog_tester.dart';
 import './width_dialog_tester.dart';
 

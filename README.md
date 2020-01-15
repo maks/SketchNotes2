@@ -1,15 +1,22 @@
-# DrawApp
+# sketchnotes_flutter
 
-<a href="https://github.com/Solido/awesome-flutter">
-   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
-</a>
+Second generation of the [Sketch Notes Android app](https://play.google.com/store/apps/details?id=com.manichord.sketchnotes&hl=en_AU), now built with Flutter.
 
-Sample Flutter Drawing App which allows the user to draw onto the canvas along with color picker and brush thickness slider.
+It is forked from the [excellent drawapp sample app](https://github.com/SnakeyHips/drawapp).
 
-![](drawapp.gif)
+## Status
 
-All code free to use and located within [/lib](https://github.com/SnakeyHips/drawapp/tree/master/lib).
+Currently under active development and NOT YET PUBLISHED on Google Play.
 
-Special thanks to stackoverflow user Andrey Turkovsky for helping out with color per drawn line issue. 
+## License
 
-Merged with [domesticmouse/drawapp](https://github.com/domesticmouse/drawapp) which added cool stuff like BLoC pattern and tests. [Go here](https://github.com/SnakeyHips/drawapp/tree/7a3075bb3e33e5e7a4cef24dfed19d2cb26ee2fa) if you want a version without these which might be easily to understand for those without BLoC knowledge.
+MIT License
+
+Copyright (c) 2018 Jake Gough
+Copyright (c) 2020 Maksim Lin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

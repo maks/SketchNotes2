@@ -1,5 +1,5 @@
-import 'package:drawapp/draw_page.dart';
-import 'package:drawapp/bloc/painter_bloc.dart';
+import 'package:sketchnotes2/draw_page.dart';
+import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class DrawApp extends StatelessWidget {

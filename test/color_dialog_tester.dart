@@ -1,4 +1,4 @@
-import 'package:drawapp/dialogs/color_dialog.dart';
+import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:flutter/material.dart';
 
 class ColorDialogTester extends StatefulWidget {
