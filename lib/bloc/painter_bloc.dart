@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:built_collection/built_collection.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/clear.dart';
 import '../models/color.dart';
@@ -9,8 +8,7 @@ import '../models/end_touch.dart';
 import '../models/stroke.dart';
 import '../models/stroke_width.dart';
 import '../models/touch_location.dart';
-
-part 'bloc_provider.dart';
+import 'bloc_base.dart';
 
 class PainterBloc extends BlocBase {
   // Completed strokes
@@ -84,7 +82,7 @@ class PainterBloc extends BlocBase {
       );
 
   void finalizeCurrentStroke() {
-    if (_locations.length > 0) {
+    if (_locations.isNotEmpty) {
       _strokes = (_strokes.toBuilder()..add(_stroke)).build();
       _strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();

@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:sketchnotes2/draw_page.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -6,14 +7,14 @@ class DrawApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DrawApp',
+      title: 'SketchNotes',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('DrawApp'),
+          title: Text('SketchNotes'),
         ),
-        body: BlocProvider<PainterBloc>(
+        body: Provider<PainterBloc>(
           child: DrawPage(),
-          bloc: PainterBloc(),
+          create: (_) => PainterBloc(),
         ),
       ),
     );
