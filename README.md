@@ -6,6 +6,8 @@ It is forked from the [excellent drawapp sample app](https://github.com/SnakeyHi
 
 ## Status
 
+[![Codemagic build status](https://api.codemagic.io/apps/5c2950cb57670e000d8486d9/5c2950cb57670e000d8486d8/status_badge.svg)](https://codemagic.io/apps/5c2950cb57670e000d8486d9/5c2950cb57670e000d8486d8/latest_build)
+
 Currently under active development and NOT YET PUBLISHED on Google Play.
 
 ## License
