@@ -1,3 +1,5 @@
+import 'package:mockito/mockito.dart';
+import 'package:sketchnotes2/services/preferences_service.dart';
 import 'package:test/test.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/models/color.dart';
@@ -218,4 +220,20 @@ void main() {
       count: 7,
     ));
   });
+
+  test('persist change in pen size', () async {
+    final prefsService = MockPrefsServices();
+    final testPenSize = 20.0;
+    when(prefsService.savePenSize(any)).thenAnswer((_) async => true);
+    final painterBloc = PainterBloc(preferences: prefsService);
+
+    painterBloc.drawEvent.add(StrokeWidthChangeEvent((builder) {
+      builder.width = testPenSize;
+    }));
+
+    await untilCalled(prefsService.savePenSize(any));
+    verify(prefsService.savePenSize(testPenSize)).called(1);
+  });
 }
+
+class MockPrefsServices extends Mock implements PreferencesService {}

@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:rxdart/rxdart.dart';
-import '../models/clear.dart';
-import '../models/color.dart';
-import '../models/draw_event.dart';
-import '../models/end_touch.dart';
-import '../models/stroke.dart';
-import '../models/stroke_width.dart';
-import '../models/touch_location.dart';
+import 'package:sketchnotes2/services/preferences_service.dart';
+import 'package:sketchnotes2/models/clear.dart';
+import 'package:sketchnotes2/models/color.dart';
+import 'package:sketchnotes2/models/draw_event.dart';
+import 'package:sketchnotes2/models/end_touch.dart';
+import 'package:sketchnotes2/models/stroke.dart';
+import 'package:sketchnotes2/models/stroke_width.dart';
+import 'package:sketchnotes2/models/touch_location.dart';
 import 'bloc_base.dart';
 
 class PainterBloc extends BlocBase {
+  final PreferencesService _preferences;
+
   // Completed strokes
   BuiltList<Stroke> _strokes = BuiltList<Stroke>();
 
@@ -40,7 +43,7 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc() {
+  PainterBloc({preferences}) : this._preferences = preferences {
     // Publish initial state
     _strokesOut.add(_strokes);
     _colorOut.add(_color);
@@ -66,6 +69,7 @@ class PainterBloc extends BlocBase {
         finalizeCurrentStroke();
         _width = drawEvent.width;
         _widthOut.add(_width);
+        _preferences?.savePenSize(_width);
       } else {
         throw UnimplementedError('Unknown DrawEvent type: $drawEvent');
       }
