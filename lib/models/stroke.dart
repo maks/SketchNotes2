@@ -13,5 +13,5 @@ abstract class Stroke implements Built<Stroke, StrokeBuilder> {
   ColorChangeEvent get color;
 
   Stroke._();
-  factory Stroke([updates(StrokeBuilder b)]) = _$Stroke;
+  factory Stroke([void Function(StrokeBuilder) updates]) = _$Stroke;
 }

@@ -13,6 +13,7 @@ class SharedPreferencesService implements PreferencesService {
 
   SharedPreferencesService(this.prefs);
 
+  @override
   double get penSize {
     if (prefs == null) {
       LOG.e('MISSING SHARED PREFS');
@@ -21,6 +22,7 @@ class SharedPreferencesService implements PreferencesService {
     return prefValue ?? 1;
   }
 
+  @override
   Future<bool> savePenSize(double size) async =>
       prefs.setDouble(PEN_WIDTH_KEY, size);
 }

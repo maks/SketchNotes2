@@ -11,6 +11,7 @@ abstract class TouchLocationEvent
   double get y;
 
   TouchLocationEvent._();
-  factory TouchLocationEvent([updates(TouchLocationEventBuilder b)]) =
+  factory TouchLocationEvent(
+          [void Function(TouchLocationEventBuilder) updates]) =
       _$TouchLocationEvent;
 }

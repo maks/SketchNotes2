@@ -1,5 +1,11 @@
 include: package:pedantic/analysis_options.yaml
 
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
+
 linter:
   rules:
    - always_put_control_body_on_new_line
@@ -12,4 +18,4 @@ linter:
    - prefer_single_quotes
    - prefer_final_fields
    - prefer_final_locals
-   - omit_local_variable_types
+   - annotate_overrides

@@ -19,7 +19,7 @@ class ColorDialogTestingState extends State<ColorDialogTester> {
           child: MaterialButton(
             child: Text('Select Color'),
             onPressed: () async {
-              final temp = await showDialog(
+              final temp = await showDialog<Color>(
                 context: context,
                 builder: (context) => ColorDialog(),
               );
