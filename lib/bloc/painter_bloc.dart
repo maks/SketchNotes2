@@ -47,7 +47,12 @@ class PainterBloc extends BlocBase {
     // Publish initial state
     _strokesOut.add(_strokes);
     _colorOut.add(_color);
-    _widthOut.add(_width);
+
+    if (preferences != null) {
+      _initFromPreferences();
+    } else {
+      _widthOut.add(_width);
+    }
 
     // Update state based on events
     _drawEvents.stream.listen((drawEvent) {
@@ -91,6 +96,10 @@ class PainterBloc extends BlocBase {
       _strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();
     }
+  }
+
+  Future<void> _initFromPreferences() async {
+    _widthOut.add((await _preferences.penSize));
   }
 
   @override

@@ -17,12 +17,16 @@ class DrawApp extends StatelessWidget {
         body: FutureBuilder<SharedPreferences>(
             future: SharedPreferences.getInstance(),
             builder: (context, snapshot) {
-              return Provider<PainterBloc>(
-                child: DrawPage(),
-                create: (_) => PainterBloc(
-                  preferences: SharedPreferencesService(snapshot.data),
-                ),
-              );
+              if (snapshot.hasData) {
+                return Provider<PainterBloc>(
+                  child: DrawPage(),
+                  create: (_) => PainterBloc(
+                    preferences: SharedPreferencesService(snapshot.data),
+                  ),
+                );
+              } else {
+                return Container();
+              }
             }),
       ),
     );
