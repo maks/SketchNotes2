@@ -6,14 +6,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sketchnotes2/app.dart';
 import './color_dialog_tester.dart';
 import './width_dialog_tester.dart';
 
 void main() {
-  testWidgets('Clicking brush FAB displays mini fabs', (tester) async {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    await SharedPreferences.getInstance();
+  });
+
+  Future<void> _initApp(WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(DrawApp());
+    // need 2nd pump to get DrawApps future builder to resolve future value
+    await tester.pump();
+  }
+
+  testWidgets('Clicking brush FAB displays mini fabs', (tester) async {
+    await _initApp(tester);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -30,8 +42,7 @@ void main() {
   });
 
   testWidgets('Clicking brush FAB twice hides mini fabs', (tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(DrawApp());
+    await _initApp(tester);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -52,7 +63,7 @@ void main() {
 
   testWidgets('Clicking the lens icon brings up the Brush thickness panel',
       (tester) async {
-    await tester.pumpWidget(DrawApp());
+    await _initApp(tester);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -77,7 +88,7 @@ void main() {
 
   testWidgets('Clicking the color lens icon brings up the Brush color panel',
       (tester) async {
-    await tester.pumpWidget(DrawApp());
+    await _initApp(tester);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
