@@ -43,7 +43,8 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc({preferences}) : this._preferences = preferences {
+  PainterBloc({PreferencesService preferences})
+      : this._preferences = preferences {
     // Publish initial state
     _strokesOut.add(_strokes);
     _colorOut.add(_color);

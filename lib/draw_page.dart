@@ -50,7 +50,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
         child: GestureDetector(
           onPanUpdate: (DragUpdateDetails details) {
             setState(() {
-              final RenderBox object = context.findRenderObject();
+              final RenderBox object = context.findRenderObject() as RenderBox;
               final localPosition =
                   object.globalToLocal(details.globalPosition);
               bloc.drawEvent.add(TouchLocationEvent((builder) {
@@ -114,7 +114,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                       child: Icon(Icons.lens),
                       onPressed: () async {
                         final strokeWidth = bloc.width.value;
-                        final newWidth = await showDialog(
+                        final newWidth = await showDialog<double>(
                             context: context,
                             builder: (context) =>
                                 WidthDialog(strokeWidth: strokeWidth));
@@ -143,10 +143,10 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                       mini: true,
                       child: Icon(Icons.color_lens),
                       onPressed: () async {
-                        final newColor = await showDialog(
+                        final newColor = await showDialog<Color>(
                           context: context,
                           builder: (context) => ColorDialog(),
-                        ) as Color;
+                        );
                         if (newColor != null) {
                           bloc.drawEvent.add(ColorChangeEvent((builder) {
                             builder

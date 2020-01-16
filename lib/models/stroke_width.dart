@@ -12,6 +12,7 @@ abstract class StrokeWidthChangeEvent
   double get width;
 
   StrokeWidthChangeEvent._();
-  factory StrokeWidthChangeEvent([updates(StrokeWidthChangeEventBuilder b)]) =
+  factory StrokeWidthChangeEvent(
+          [void Function(StrokeWidthChangeEventBuilder) updates]) =
       _$StrokeWidthChangeEvent;
 }

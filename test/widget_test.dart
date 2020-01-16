@@ -13,7 +13,7 @@ import './width_dialog_tester.dart';
 
 void main() {
   setUp(() async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues(<String, dynamic>{});
     await SharedPreferences.getInstance();
   });
 

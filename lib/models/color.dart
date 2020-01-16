@@ -1,5 +1,5 @@
 import 'package:built_value/built_value.dart';
-import './draw_event.dart';
+import 'draw_event.dart';
 
 // Generated code part of this Built Value.
 // Generate using `flutter packages pub run build_runner build`
@@ -12,6 +12,6 @@ abstract class ColorChangeEvent
   int get blue;
 
   ColorChangeEvent._();
-  factory ColorChangeEvent([updates(ColorChangeEventBuilder b)]) =
+  factory ColorChangeEvent([void Function(ColorChangeEventBuilder) updates]) =
       _$ColorChangeEvent;
 }
