@@ -65,6 +65,7 @@ class PainterBloc extends BlocBase {
         finalizeCurrentStroke();
         _color = drawEvent;
         _colorOut.add(_color);
+        _preferences.savePenColor(_color.red, _color.green, _color.blue);
       } else if (drawEvent is TouchLocationEvent) {
         _locations = (_locations.toBuilder()..add(drawEvent)).build();
         final allStrokes = (_strokes.toBuilder()..add(_stroke)).build();

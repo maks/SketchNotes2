@@ -7,6 +7,7 @@ import 'package:sketchnotes2/services/preferences_service.dart';
 
 class SharedPreferencesService implements PreferencesService {
   static const PEN_WIDTH_KEY = 'pen.width';
+  static const PEN_COLOR_KEY = 'pen.color';
   final Logger log = Logger('SharedPreferencesService');
 
   final SharedPreferences prefs;
@@ -25,4 +26,9 @@ class SharedPreferencesService implements PreferencesService {
   @override
   Future<bool> savePenSize(double size) async =>
       prefs.setDouble(PEN_WIDTH_KEY, size);
+
+  @override
+  Future<bool> savePenColor(int red, int green, int blue) {
+    return prefs.setString(PEN_COLOR_KEY, '$red,$green,$blue');
+  }
 }

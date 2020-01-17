@@ -249,6 +249,24 @@ void main() {
     );
     verify(prefsService.penSize).called(1);
   });
+
+  test('persist change in pen color', () async {
+    final prefsService = MockPrefsServices();
+    final testPenColorChange = ColorChangeEvent((builder) {
+      builder
+        ..red = 128
+        ..green = 0
+        ..blue = 64;
+    });
+    when(prefsService.savePenColor(any, any, any))
+        .thenAnswer((_) async => true);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+    painterBloc.drawEvent.add(testPenColorChange);
+
+    await untilCalled(prefsService.savePenColor(any, any, any));
+    verify(prefsService.savePenColor(128, 0, 64)).called(1);
+  });
 }
 
 class MockPrefsServices extends Mock implements PreferencesService {}
