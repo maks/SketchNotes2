@@ -31,4 +31,13 @@ class SharedPreferencesService implements PreferencesService {
   Future<bool> savePenColor(int red, int green, int blue) {
     return prefs.setString(PEN_COLOR_KEY, '$red,$green,$blue');
   }
+
+  @override
+  List<int> get penColor =>
+      prefs
+          ?.getString(PEN_COLOR_KEY)
+          ?.split(',')
+          ?.map((s) => int.parse(s))
+          ?.toList() ??
+      [0, 0, 0];
 }

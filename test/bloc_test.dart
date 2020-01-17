@@ -238,7 +238,7 @@ void main() {
   test('initialise pen size from persisted value', () {
     final prefsService = MockPrefsServices();
     final testPenSize = 42.0;
-    when(prefsService.penSize).thenAnswer((_) => testPenSize);
+    when(prefsService.penSize).thenReturn(testPenSize);
 
     final painterBloc = PainterBloc(preferences: prefsService);
 
@@ -266,6 +266,23 @@ void main() {
 
     await untilCalled(prefsService.savePenColor(any, any, any));
     verify(prefsService.savePenColor(128, 0, 64)).called(1);
+  });
+
+  test('initialise pen color from persisted value', () {
+    final prefsService = MockPrefsServices();
+    final testPenColor = [0, 10, 50];
+    when(prefsService.penColor).thenReturn(testPenColor);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+
+    painterBloc.color.listen(
+      expectAsync1((color) {
+        expect(color.red, testPenColor[0]);
+        expect(color.green, testPenColor[1]);
+        expect(color.blue, testPenColor[2]);
+      }),
+    );
+    verify(prefsService.penColor).called(1);
   });
 }
 
