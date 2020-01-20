@@ -100,7 +100,8 @@ class PainterBloc extends BlocBase {
   }
 
   void _initFromPreferences() {
-    _widthOut.add((_preferences.penSize));
+    _width = _preferences.penSize;
+    _widthOut.add(_width);
     final penColor = _preferences.penColor;
     if (penColor != null) {
       _color = (ColorChangeEventBuilder()
