@@ -103,11 +103,12 @@ class PainterBloc extends BlocBase {
     _widthOut.add((_preferences.penSize));
     final penColor = _preferences.penColor;
     if (penColor != null) {
-      _colorOut.add((ColorChangeEventBuilder()
+      _color = (ColorChangeEventBuilder()
             ..red = penColor[0]
             ..green = penColor[1]
             ..blue = penColor[2])
-          .build());
+          .build();
+      _colorOut.add(_color);
     }
   }
 

@@ -284,6 +284,39 @@ void main() {
     );
     verify(prefsService.penColor).called(1);
   });
+
+  test('new stroke uses initialise pen color from persisted value', () {
+    final prefsService = MockPrefsServices();
+    final testPenColor = [0, 10, 50];
+    final testPenColorEvent = (ColorChangeEventBuilder()
+          ..red = testPenColor[0]
+          ..green = testPenColor[1]
+          ..blue = testPenColor[2])
+        .build();
+    when(prefsService.penColor).thenReturn(testPenColor);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+
+    painterBloc.drawEvent.add(TouchLocationEvent((builder) {
+      builder
+        ..x = 123
+        ..y = 321;
+    }));
+    painterBloc.drawEvent.add(TouchLocationEvent((builder) {
+      builder
+        ..x = 123
+        ..y = 331;
+    }));
+    painterBloc.drawEvent.add(EndTouchEvent());
+
+    painterBloc.strokes.listen(
+      expectAsync1((strokes) {
+        if (strokes.isNotEmpty) {
+          expect(strokes.first.color, testPenColorEvent);
+        }
+      }, count: 4),
+    );
+  });
 }
 
 class MockPrefsServices extends Mock implements PreferencesService {}
