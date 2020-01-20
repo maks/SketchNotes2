@@ -43,16 +43,15 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc({PreferencesService preferences})
-      : this._preferences = preferences {
+  PainterBloc({PreferencesService preferences}) : _preferences = preferences {
     // Publish initial state
     _strokesOut.add(_strokes);
-    _colorOut.add(_color);
 
     if (preferences != null) {
       _initFromPreferences();
     } else {
       _widthOut.add(_width);
+      _colorOut.add(_color);
     }
 
     // Update state based on events
@@ -65,6 +64,7 @@ class PainterBloc extends BlocBase {
         finalizeCurrentStroke();
         _color = drawEvent;
         _colorOut.add(_color);
+        _preferences?.savePenColor(_color.red, _color.green, _color.blue);
       } else if (drawEvent is TouchLocationEvent) {
         _locations = (_locations.toBuilder()..add(drawEvent)).build();
         final allStrokes = (_strokes.toBuilder()..add(_stroke)).build();
@@ -99,8 +99,18 @@ class PainterBloc extends BlocBase {
     }
   }
 
-  Future<void> _initFromPreferences() async {
-    _widthOut.add((await _preferences.penSize));
+  void _initFromPreferences() {
+    _width = _preferences.penSize;
+    _widthOut.add(_width);
+    final penColor = _preferences.penColor;
+    if (penColor != null) {
+      _color = (ColorChangeEventBuilder()
+            ..red = penColor[0]
+            ..green = penColor[1]
+            ..blue = penColor[2])
+          .build();
+      _colorOut.add(_color);
+    }
   }
 
   @override

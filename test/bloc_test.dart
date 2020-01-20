@@ -238,7 +238,7 @@ void main() {
   test('initialise pen size from persisted value', () {
     final prefsService = MockPrefsServices();
     final testPenSize = 42.0;
-    when(prefsService.penSize).thenAnswer((_) => testPenSize);
+    when(prefsService.penSize).thenReturn(testPenSize);
 
     final painterBloc = PainterBloc(preferences: prefsService);
 
@@ -248,6 +248,92 @@ void main() {
       }),
     );
     verify(prefsService.penSize).called(1);
+  });
+
+  test('persist change in pen color', () async {
+    final prefsService = MockPrefsServices();
+    final testPenColorChange = ColorChangeEvent((builder) {
+      builder
+        ..red = 128
+        ..green = 0
+        ..blue = 64;
+    });
+    when(prefsService.savePenColor(any, any, any))
+        .thenAnswer((_) async => true);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+    painterBloc.drawEvent.add(testPenColorChange);
+
+    await untilCalled(prefsService.savePenColor(any, any, any));
+    verify(prefsService.savePenColor(128, 0, 64)).called(1);
+  });
+
+  test('initialise pen color from persisted value', () {
+    final prefsService = MockPrefsServices();
+    final testPenColor = [0, 10, 50];
+    when(prefsService.penColor).thenReturn(testPenColor);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+
+    painterBloc.color.listen(
+      expectAsync1((color) {
+        expect(color.red, testPenColor[0]);
+        expect(color.green, testPenColor[1]);
+        expect(color.blue, testPenColor[2]);
+      }),
+    );
+    verify(prefsService.penColor).called(1);
+  });
+
+  test('new stroke uses pen color from persisted value', () {
+    final prefsService = MockPrefsServices();
+    final testPenColor = [0, 10, 50];
+    final testPenColorEvent = (ColorChangeEventBuilder()
+          ..red = testPenColor[0]
+          ..green = testPenColor[1]
+          ..blue = testPenColor[2])
+        .build();
+    when(prefsService.penColor).thenReturn(testPenColor);
+    when(prefsService.penSize).thenReturn(1.0);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+
+    painterBloc.drawEvent.add(TouchLocationEvent((builder) {
+      builder
+        ..x = 123
+        ..y = 321;
+    }));
+    painterBloc.drawEvent.add(EndTouchEvent());
+
+    painterBloc.strokes.listen(
+      expectAsync1((strokes) {
+        if (strokes.isNotEmpty) {
+          expect(strokes.first.color, testPenColorEvent);
+        }
+      }, count: 3),
+    );
+  });
+
+  test('new stroke uses pen size from persisted value', () {
+    final prefsService = MockPrefsServices();
+    final testPenSize = 42.0;
+    when(prefsService.penSize).thenReturn(testPenSize);
+
+    final painterBloc = PainterBloc(preferences: prefsService);
+    painterBloc.drawEvent.add(TouchLocationEvent((builder) {
+      builder
+        ..x = 123
+        ..y = 321;
+    }));
+    painterBloc.drawEvent.add(EndTouchEvent());
+
+    painterBloc.strokes.listen(
+      expectAsync1((strokes) {
+        if (strokes.isNotEmpty) {
+          expect(strokes.first.strokeWidth, testPenSize);
+        }
+      }, count: 3),
+    );
   });
 }
 
