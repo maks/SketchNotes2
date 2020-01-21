@@ -75,3 +75,4 @@ coverage/lcov.info
 
 # System specific config
 .packages
+android/app/src/main/resources/sentry.properties
