@@ -1,4 +1,4 @@
-package com.example.drawapp;
+package com.manichord.sketchnotes;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

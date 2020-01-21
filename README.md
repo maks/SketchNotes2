@@ -15,6 +15,22 @@ Currently under active development and NOT YET PUBLISHED on Google Play.
 Until [this bug with code gen on hot-reload is fixed](https://github.com/dart-lang/build/issues/1132) to re-generate code you need to run:
 `flutter packages pub run build_runner build`
 
+### Sentry config
+
+The DSN needs to be supplied by the build environment.
+
+For native Android, this is via a properties file in: `app/src/main/resources` which is created by the following custom script in Codemagic:
+```
+#!/usr/bin/env sh
+
+set -e # exit on first failed commandset
+
+mkdir -p $FCI_BUILD_DIR/android/app/src/main/resources
+echo dsn=$SENTRY_DSN > $FCI_BUILD_DIR/android/app/src/main/resources/sentry.properties
+```
+
+For Flutter ...
+
 ## License
 
 MIT License
