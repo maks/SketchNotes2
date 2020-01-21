@@ -28,7 +28,7 @@ set -e # exit on first failed commandset
 mkdir -p $FCI_BUILD_DIR/android/app/src/main/resources
 echo dsn=$SENTRY_DSN > $FCI_BUILD_DIR/android/app/src/main/resources/sentry.properties
 
-echo const DSN='$SENTRY_DSN'; > $FCI_BUILD_DIR/lib/env.dart
+echo "const DSN='$SENTRY_DSN';" > $FCI_BUILD_DIR/lib/env.dart
 ```
 
 ## License
