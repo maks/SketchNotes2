@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
+import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:sketchnotes2/dialogs/width_dialog.dart';
 import 'package:sketchnotes2/image_formats.dart';
@@ -16,6 +17,7 @@ import 'package:sketchnotes2/models/end_touch.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/models/stroke_width.dart';
 import 'package:sketchnotes2/models/touch_location.dart';
+import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/strokes_painter.dart';
 
 class DrawPage extends StatefulWidget {
@@ -30,6 +32,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   final GlobalKey _globalKey = GlobalKey();
   PainterBloc _bloc;
+  final _sketchBloc = SketchBloc(fileService: FileService());
   StreamSubscription _stokesSubscription;
 
   @override
@@ -206,7 +209,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               print('save');
               final pngBytes =
                   await formatAsPng(await captureImage(_globalKey));
-              await _bloc?.saveToFile(pngBytes);
+              await _sketchBloc?.saveToFile(pngBytes);
             },
           ),
         ].where((widget) => widget != null).toList(),

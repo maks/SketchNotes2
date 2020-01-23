@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:typed_data';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sketchnotes2/logging.dart';
-import 'package:sketchnotes2/services/file_service.dart';
-import 'package:sketchnotes2/services/preferences_service.dart';
 import 'package:sketchnotes2/models/clear.dart';
 import 'package:sketchnotes2/models/color.dart';
 import 'package:sketchnotes2/models/draw_event.dart';
@@ -12,13 +10,12 @@ import 'package:sketchnotes2/models/end_touch.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/models/stroke_width.dart';
 import 'package:sketchnotes2/models/touch_location.dart';
+import 'package:sketchnotes2/services/preferences_service.dart';
+
 import 'bloc_base.dart';
 
 class PainterBloc extends BlocBase {
-  static const FILE_NAME = 'sketch.png';
-
   final PreferencesService _preferences;
-  final FileService _files;
 
   // Completed strokes
   BuiltList<Stroke> _strokes = BuiltList<Stroke>();
@@ -49,9 +46,7 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc({PreferencesService preferences, FileService fileService})
-      : _preferences = preferences,
-        _files = fileService {
+  PainterBloc({PreferencesService preferences}) : _preferences = preferences {
     // Publish initial state
     _strokesOut.add(_strokes);
 
@@ -113,15 +108,6 @@ class PainterBloc extends BlocBase {
       _strokes = (_strokes.toBuilder()..add(_stroke)).build();
       _strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();
-    }
-  }
-
-  Future<void> saveToFile(Uint8List pngBytes) {
-    if (_files != null) {
-      return _files.saveToFile(FILE_NAME, pngBytes);
-    } else {
-      LOG.e('No FileService available, cannot save file: $FILE_NAME');
-      return Future.value(null);
     }
   }
 
