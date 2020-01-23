@@ -12,4 +12,13 @@ class FileService {
     await output.writeAsBytes(bytes);
     print('wrote to file: $path');
   }
+
+  Future<Uint8List> loadFromFile(String fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = p.join(directory.path, fileName);
+    final input = File(path);
+    final bytes = await input.readAsBytes();
+    print('read from file: $path');
+    return bytes;
+  }
 }
