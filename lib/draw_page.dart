@@ -1,5 +1,9 @@
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
@@ -11,7 +15,6 @@ import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/models/stroke_width.dart';
 import 'package:sketchnotes2/models/touch_location.dart';
 import 'package:sketchnotes2/strokes_painter.dart';
-import 'package:flutter/material.dart';
 
 class DrawPage extends StatefulWidget {
   @override
@@ -22,6 +25,8 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   AnimationController _controller;
   AnimationStatus _animationStatus = AnimationStatus.dismissed;
   final StrokeCap _strokeCap = StrokeCap.round;
+
+  final GlobalKey _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -65,10 +70,13 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
           child: StreamBuilder<BuiltList<Stroke>>(
             stream: bloc.strokes,
             builder: (context, snapshot) {
-              return CustomPaint(
-                painter: StrokesPainter(
-                    strokeCap: _strokeCap, strokes: snapshot.data),
-                size: Size.infinite,
+              return RepaintBoundary(
+                key: _globalKey,
+                child: CustomPaint(
+                  painter: StrokesPainter(
+                      strokeCap: _strokeCap, strokes: snapshot.data),
+                  size: Size.infinite,
+                ),
               );
             },
           ),
