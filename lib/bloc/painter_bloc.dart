@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:built_collection/built_collection.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sketchnotes2/logging.dart';
+import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/services/preferences_service.dart';
 import 'package:sketchnotes2/models/clear.dart';
 import 'package:sketchnotes2/models/color.dart';
@@ -12,7 +15,10 @@ import 'package:sketchnotes2/models/touch_location.dart';
 import 'bloc_base.dart';
 
 class PainterBloc extends BlocBase {
+  static const FILE_NAME = 'sketch.png';
+
   final PreferencesService _preferences;
+  final FileService _files;
 
   // Completed strokes
   BuiltList<Stroke> _strokes = BuiltList<Stroke>();
@@ -43,13 +49,16 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc({PreferencesService preferences}) : _preferences = preferences {
+  PainterBloc({PreferencesService preferences, FileService fileService})
+      : _preferences = preferences,
+        _files = fileService {
     // Publish initial state
     _strokesOut.add(_strokes);
 
     if (preferences != null) {
       _initFromPreferences();
     } else {
+      LOG.e('No PreferencesService available, cannot load previous settings');
       _widthOut.add(_width);
       _colorOut.add(_color);
     }
@@ -64,7 +73,11 @@ class PainterBloc extends BlocBase {
         finalizeCurrentStroke();
         _color = drawEvent;
         _colorOut.add(_color);
-        _preferences?.savePenColor(_color.red, _color.green, _color.blue);
+        if (_preferences != null) {
+          _preferences.savePenColor(_color.red, _color.green, _color.blue);
+        } else {
+          LOG.e('No PreferencesService available, cannot save color setting');
+        }
       } else if (drawEvent is TouchLocationEvent) {
         _locations = (_locations.toBuilder()..add(drawEvent)).build();
         final allStrokes = (_strokes.toBuilder()..add(_stroke)).build();
@@ -75,7 +88,11 @@ class PainterBloc extends BlocBase {
         finalizeCurrentStroke();
         _width = drawEvent.width;
         _widthOut.add(_width);
-        _preferences?.savePenSize(_width);
+        if (_preferences != null) {
+          _preferences.savePenSize(_width);
+        } else {
+          LOG.e('No PreferencesService available, cannot save width setting');
+        }
       } else {
         throw UnimplementedError('Unknown DrawEvent type: $drawEvent');
       }
@@ -96,6 +113,15 @@ class PainterBloc extends BlocBase {
       _strokes = (_strokes.toBuilder()..add(_stroke)).build();
       _strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();
+    }
+  }
+
+  Future<void> saveToFile(Uint8List pngBytes) {
+    if (_files != null) {
+      return _files.saveToFile(FILE_NAME, pngBytes);
+    } else {
+      LOG.e('No FileService available, cannot save file: $FILE_NAME');
+      return Future.value(null);
     }
   }
 

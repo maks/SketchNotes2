@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
+import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
 
 class DrawApp extends StatelessWidget {
@@ -22,6 +23,7 @@ class DrawApp extends StatelessWidget {
                   child: DrawPage(),
                   create: (_) => PainterBloc(
                     preferences: SharedPreferencesService(snapshot.data),
+                    fileService: FileService(),
                   ),
                 );
               } else {

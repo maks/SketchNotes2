@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:sketchnotes2/dialogs/width_dialog.dart';
+import 'package:sketchnotes2/image_formats.dart';
 import 'package:sketchnotes2/models/clear.dart';
 import 'package:sketchnotes2/models/color.dart';
 import 'package:sketchnotes2/models/end_touch.dart';
@@ -27,6 +29,8 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   final StrokeCap _strokeCap = StrokeCap.round;
 
   final GlobalKey _globalKey = GlobalKey();
+  PainterBloc _bloc;
+  StreamSubscription _stokesSubscription;
 
   @override
   void initState() {
@@ -47,9 +51,22 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final bloc = Provider.of<PainterBloc>(context);
+    if (bloc != this._bloc) {
+      this._bloc = bloc;
+    }
+  }
 
+  @override
+  void dispose() {
+    _stokesSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         child: GestureDetector(
@@ -58,7 +75,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               final RenderBox object = context.findRenderObject() as RenderBox;
               final localPosition =
                   object.globalToLocal(details.globalPosition);
-              bloc.drawEvent.add(TouchLocationEvent((builder) {
+              _bloc.drawEvent.add(TouchLocationEvent((builder) {
                 builder
                   ..x = localPosition.dx
                   ..y = localPosition.dy;
@@ -66,9 +83,9 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
             });
           },
           onPanEnd: (DragEndDetails details) =>
-              bloc.drawEvent.add(EndTouchEvent()),
+              _bloc.drawEvent.add(EndTouchEvent()),
           child: StreamBuilder<BuiltList<Stroke>>(
-            stream: bloc.strokes,
+            stream: _bloc.strokes,
             builder: (context, snapshot) {
               return RepaintBoundary(
                 key: _globalKey,
@@ -100,7 +117,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                       mini: true,
                       child: Icon(Icons.clear),
                       onPressed: () {
-                        bloc.drawEvent.add(ClearEvent());
+                        _bloc.drawEvent.add(ClearEvent());
                       },
                     ),
                   ),
@@ -121,13 +138,13 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                       mini: true,
                       child: Icon(Icons.lens),
                       onPressed: () async {
-                        final strokeWidth = bloc.width.value;
+                        final strokeWidth = _bloc.width.value;
                         final newWidth = await showDialog<double>(
                             context: context,
                             builder: (context) =>
                                 WidthDialog(strokeWidth: strokeWidth));
                         if (newWidth != null) {
-                          bloc.drawEvent.add(StrokeWidthChangeEvent((builder) {
+                          _bloc.drawEvent.add(StrokeWidthChangeEvent((builder) {
                             builder.width = newWidth;
                           }));
                         }
@@ -156,7 +173,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                           builder: (context) => ColorDialog(),
                         );
                         if (newColor != null) {
-                          bloc.drawEvent.add(ColorChangeEvent((builder) {
+                          _bloc.drawEvent.add(ColorChangeEvent((builder) {
                             builder
                               ..red = newColor.red
                               ..green = newColor.green
@@ -180,12 +197,16 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
                 );
               },
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_controller.isDismissed) {
                 _controller.forward();
               } else {
                 _controller.reverse();
               }
+              print('save');
+              final pngBytes =
+                  await formatAsPng(await captureImage(_globalKey));
+              await _bloc?.saveToFile(pngBytes);
             },
           ),
         ].where((widget) => widget != null).toList(),
