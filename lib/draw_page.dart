@@ -32,7 +32,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   final GlobalKey _globalKey = GlobalKey();
   PainterBloc _bloc;
-  final _sketchBloc = SketchBloc(fileService: FileService());
+  SketchBloc _sketchBloc;
   StreamSubscription _stokesSubscription;
 
   @override
@@ -58,7 +58,11 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     super.didChangeDependencies();
     final bloc = Provider.of<PainterBloc>(context);
     if (bloc != this._bloc) {
-      this._bloc = bloc;
+      _bloc = bloc;
+      _sketchBloc = SketchBloc(
+        fileService: FileService(),
+        strokes: _bloc.strokes,
+      );
     }
   }
 
