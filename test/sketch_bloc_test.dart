@@ -23,13 +23,24 @@ void main() {
       fileName: anyNamed('fileName'),
       text: anyNamed('text'),
     ));
-    verify(
-      mockFileService.saveToFile(
-        bytes: anyNamed('bytes'),
-        fileName: 'sketch.json',
-        text: anyNamed('text'),
-      ),
-    );
+    final json = '''[Stroke {
+        locations=[TouchLocationEvent {
+          x=25.0,
+          y=35.0,
+        }],
+        strokeWidth=5.0,
+        color=ColorChangeEvent {
+          red=0,
+          green=0,
+          blue=0,
+        },
+      }]''';
+    final jsonPersisted = verify(mockFileService.saveToFile(
+      bytes: anyNamed('bytes'),
+      fileName: 'sketch.json',
+      text: captureAnyNamed('text'),
+    )).captured.single.toString();
+    expect(collapseWhitespace(jsonPersisted), collapseWhitespace(json));
   });
 }
 
