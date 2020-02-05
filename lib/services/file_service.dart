@@ -5,9 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 class FileService {
+  Future<Directory> get _storageDirectory => getApplicationDocumentsDirectory();
+
   Future<void> saveToFile(
       {String fileName, Uint8List bytes, String text}) async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await _storageDirectory;
     final path = p.join(directory.path, fileName);
     final output = File(path);
     if (text != null) {
@@ -19,7 +21,7 @@ class FileService {
   }
 
   Future<Uint8List> loadFromFile(String fileName) async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await _storageDirectory;
     final path = p.join(directory.path, fileName);
     final input = File(path);
     final bytes = await input.readAsBytes();

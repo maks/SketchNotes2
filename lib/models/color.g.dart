@@ -6,6 +6,62 @@ part of 'color.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<ColorChangeEvent> _$colorChangeEventSerializer =
+    new _$ColorChangeEventSerializer();
+
+class _$ColorChangeEventSerializer
+    implements StructuredSerializer<ColorChangeEvent> {
+  @override
+  final Iterable<Type> types = const [ColorChangeEvent, _$ColorChangeEvent];
+  @override
+  final String wireName = 'ColorChangeEvent';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, ColorChangeEvent object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'red',
+      serializers.serialize(object.red, specifiedType: const FullType(int)),
+      'green',
+      serializers.serialize(object.green, specifiedType: const FullType(int)),
+      'blue',
+      serializers.serialize(object.blue, specifiedType: const FullType(int)),
+    ];
+
+    return result;
+  }
+
+  @override
+  ColorChangeEvent deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new ColorChangeEventBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'red':
+          result.red = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'green':
+          result.green = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'blue':
+          result.blue = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$ColorChangeEvent extends ColorChangeEvent {
   @override
   final int red;

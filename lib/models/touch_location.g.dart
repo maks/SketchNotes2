@@ -6,6 +6,56 @@ part of 'touch_location.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<TouchLocationEvent> _$touchLocationEventSerializer =
+    new _$TouchLocationEventSerializer();
+
+class _$TouchLocationEventSerializer
+    implements StructuredSerializer<TouchLocationEvent> {
+  @override
+  final Iterable<Type> types = const [TouchLocationEvent, _$TouchLocationEvent];
+  @override
+  final String wireName = 'TouchLocationEvent';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, TouchLocationEvent object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'x',
+      serializers.serialize(object.x, specifiedType: const FullType(double)),
+      'y',
+      serializers.serialize(object.y, specifiedType: const FullType(double)),
+    ];
+
+    return result;
+  }
+
+  @override
+  TouchLocationEvent deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new TouchLocationEventBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'x':
+          result.x = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'y':
+          result.y = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$TouchLocationEvent extends TouchLocationEvent {
   @override
   final double x;

@@ -13,7 +13,7 @@ Currently under active development and NOT YET PUBLISHED on Google Play.
 ## Building
 
 Until [this bug with code gen on hot-reload is fixed](https://github.com/dart-lang/build/issues/1132) to re-generate code you need to run:
-`flutter packages pub run build_runner build`
+`flutter packages pub run build_runner build --delete-conflicting-outputs`
 
 ### Sentry config
 

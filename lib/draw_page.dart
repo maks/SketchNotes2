@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -10,7 +9,6 @@ import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:sketchnotes2/dialogs/width_dialog.dart';
-import 'package:sketchnotes2/image_formats.dart';
 import 'package:sketchnotes2/models/clear.dart';
 import 'package:sketchnotes2/models/color.dart';
 import 'package:sketchnotes2/models/end_touch.dart';
@@ -33,7 +31,6 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   final GlobalKey _globalKey = GlobalKey();
   PainterBloc _bloc;
   SketchBloc _sketchBloc;
-  StreamSubscription _stokesSubscription;
 
   @override
   void initState() {
@@ -68,7 +65,7 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _stokesSubscription?.cancel();
+    _sketchBloc?.dispose();
     super.dispose();
   }
 
@@ -210,10 +207,6 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
               } else {
                 _controller.reverse();
               }
-              print('save');
-              final pngBytes =
-                  await formatAsPng(await captureImage(_globalKey));
-              await _sketchBloc?.saveToFile(pngBytes);
             },
           ),
         ].where((widget) => widget != null).toList(),

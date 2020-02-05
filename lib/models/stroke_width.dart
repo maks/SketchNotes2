@@ -1,4 +1,5 @@
 import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import './draw_event.dart';
 
 // Generated code part of this Built Value.
@@ -10,6 +11,9 @@ abstract class StrokeWidthChangeEvent
         Built<StrokeWidthChangeEvent, StrokeWidthChangeEventBuilder>,
         DrawEvent {
   double get width;
+
+  static Serializer<StrokeWidthChangeEvent> get serializer =>
+      _$strokeWidthChangeEventSerializer;
 
   StrokeWidthChangeEvent._();
   factory StrokeWidthChangeEvent(
