@@ -35,7 +35,7 @@ class PainterBloc extends BlocBase {
 
   // Streamed outputs from this BLoC
   final _strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
-  StreamSink<BuiltList<Stroke>> get _strokesOut => _strokesSubject.sink;
+  StreamSink<BuiltList<Stroke>> get strokesOut => _strokesSubject.sink;
   ValueObservable<BuiltList<Stroke>> get strokes => _strokesSubject.stream;
 
   final _colorSubject = BehaviorSubject<ColorChangeEvent>();
@@ -48,7 +48,7 @@ class PainterBloc extends BlocBase {
 
   PainterBloc({PreferencesService preferences}) : _preferences = preferences {
     // Publish initial state
-    _strokesOut.add(_strokes);
+    strokesOut.add(_strokes);
 
     if (preferences != null) {
       _initFromPreferences();
@@ -63,7 +63,7 @@ class PainterBloc extends BlocBase {
       if (drawEvent is ClearEvent) {
         _strokes = BuiltList<Stroke>();
         _locations = BuiltList<TouchLocationEvent>();
-        _strokesOut.add(_strokes);
+        strokesOut.add(_strokes);
       } else if (drawEvent is ColorChangeEvent) {
         finalizeCurrentStroke();
         _color = drawEvent;
@@ -76,7 +76,7 @@ class PainterBloc extends BlocBase {
       } else if (drawEvent is TouchLocationEvent) {
         _locations = (_locations.toBuilder()..add(drawEvent)).build();
         final allStrokes = (_strokes.toBuilder()..add(_stroke)).build();
-        _strokesOut.add(allStrokes);
+        strokesOut.add(allStrokes);
       } else if (drawEvent is EndTouchEvent) {
         finalizeCurrentStroke();
       } else if (drawEvent is StrokeWidthChangeEvent) {
@@ -106,7 +106,7 @@ class PainterBloc extends BlocBase {
   void finalizeCurrentStroke() {
     if (_locations.isNotEmpty) {
       _strokes = (_strokes.toBuilder()..add(_stroke)).build();
-      _strokesOut.add(_strokes);
+      strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();
     }
   }

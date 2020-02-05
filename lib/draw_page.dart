@@ -51,14 +51,15 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     final bloc = Provider.of<PainterBloc>(context);
     if (bloc != this._bloc) {
       _bloc = bloc;
-      _sketchBloc = SketchBloc(
+      _sketchBloc = await SketchBloc.build(
         fileService: FileService(),
         strokes: _bloc.strokes,
+        strokesSink: _bloc.strokesOut,
       );
     }
   }

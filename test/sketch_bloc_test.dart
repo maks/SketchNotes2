@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,14 +23,69 @@ void main() {
   });
 
   group('sketch serialisation', () {
-    test('persist strokes', () async {
-      final strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
+    test('read persisted file when sketchbloc created', () async {
       final mockFileService = MockFileService();
-      SketchBloc(strokes: strokesSubject, fileService: mockFileService);
+      final strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
+
+      when(mockFileService.loadFromFileAsString(any))
+          .thenAnswer((_) => Future.value(''));
+
+      final testBloc = await SketchBloc.build(
+        strokes: strokesSubject,
+        fileService: mockFileService,
+        strokesSink: strokesSubject.sink,
+      );
+
+      expect(testBloc, isA<SketchBloc>());
+    });
+
+    test('sketch bloc caches added strokes', () async {
+      final mockFileService = MockFileService();
+      final strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
+
+      when(mockFileService.loadFromFileAsString(any))
+          .thenAnswer((_) => Future.value(''));
+
+      final testBloc = await SketchBloc.build(
+        strokes: strokesSubject,
+        fileService: mockFileService,
+        strokesSink: strokesSubject.sink,
+      );
+
       final stroke1 = _makeStroke(5, 10, 20, 90, 25, 35);
       final strokes = (BuiltList<Stroke>().toBuilder()..add(stroke1)).build();
 
       strokesSubject.sink.add(strokes);
+
+      // need to wait for stream to have emited the strokes obj we added to its sink
+      // but emitsThrough won't consume it, allowing the Bloc to consume it
+      await expectLater(strokesSubject.stream, emitsThrough(strokes));
+
+      expect(testBloc.sketchFile, isNotNull);
+      expect(testBloc.sketchFile.strokes, strokes);
+    });
+
+    test('persist strokes', () async {
+      final strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
+      final mockFileService = MockFileService();
+      when(mockFileService.loadFromFileAsString(any))
+          .thenAnswer((_) => Future.value(''));
+
+      final testBloc = await SketchBloc.build(
+        strokes: strokesSubject,
+        fileService: mockFileService,
+        strokesSink: strokesSubject.sink,
+      );
+      final stroke1 = _makeStroke(5, 10, 20, 90, 25, 35);
+      final strokes = (BuiltList<Stroke>().toBuilder()..add(stroke1)).build();
+
+      strokesSubject.sink.add(strokes);
+
+      // need to wait for stream to have emited the strokes obj we added to its sink
+      // but emitsThrough won't consume it, allowing the Bloc to consume it
+      await expectLater(strokesSubject.stream, emitsThrough(strokes));
+
+      await testBloc.saveToFile();
 
       await untilCalled(mockFileService.saveToFile(
         bytes: anyNamed('bytes'),
