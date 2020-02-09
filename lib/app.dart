@@ -1,15 +1,19 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
+import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
 
 class DrawApp extends StatelessWidget {
+  final _sketchBloc = SketchBloc(FileService());
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,38 +22,32 @@ class DrawApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('SketchNotes'),
         ),
-        body: FutureBuilder<AppServices>(
-            future: _getServices(),
+        body: FutureBuilder<PainterBloc>(
+            future: _painterBloc(_sketchBloc.strokes),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final services = snapshot.data;
+                final bloc = snapshot.data;
                 return Provider<PainterBloc>(
                   child: DrawPage(),
-                  create: (_) => PainterBloc(
-                    preferences: services.sharedPrefs,
-                    strokes: SketchBloc(services.files).strokes,
-                  ),
+                  create: (_) => bloc,
                 );
               } else {
-                //TODO: need some sort of loading UI
-                return Container();
+                return Container(
+                  child: Center(child: CircularProgressIndicator()),
+                );
               }
             }),
       ),
     );
   }
 
-  Future<AppServices> _getServices() async {
-    final sharedPrefs =
-        SharedPreferencesService(await SharedPreferences.getInstance());
-    final files = FileService();
-    return AppServices(sharedPrefs, files);
+  Future<PainterBloc> _painterBloc(Future<BuiltList<Stroke>> strokes) async {
+    final painterBloc = PainterBloc(
+      preferences:
+          SharedPreferencesService(await SharedPreferences.getInstance()),
+      strokes: await strokes,
+    );
+    _sketchBloc.strokesStream = painterBloc.strokes;
+    return painterBloc;
   }
-}
-
-class AppServices {
-  final SharedPreferencesService sharedPrefs;
-  final FileService files;
-
-  AppServices(this.sharedPrefs, this.files);
 }
