@@ -44,7 +44,8 @@ dev_dependencies:
   quiver: '>=0.21.0 <3.0.0'
   test: ^1.0.0  
   mockito: ^4.1.1
-
+  fake_async: ^1.0.1 
+   
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

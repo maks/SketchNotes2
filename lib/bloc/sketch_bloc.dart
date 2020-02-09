@@ -12,6 +12,9 @@ import 'package:sketchnotes2/services/file_service.dart';
 
 class SketchBloc extends BlocBase {
   static const FILE_NAME = 'sketch.json';
+  // how long we wait to check if another stroke is not incoming
+  // so we can for exampel persist strokes
+  static const WAIT_FOR_STROKE_COMPLETION = Duration(milliseconds: 500);
 
   final FileService files;
   StreamSubscription _strokeSubscription;
@@ -29,10 +32,12 @@ class SketchBloc extends BlocBase {
   );
 
   set strokesStream(Observable<BuiltList<Stroke>> stream) {
-    _strokeSubscription = stream.listen((strokes) {
+    _strokeSubscription =
+        stream.debounce(WAIT_FOR_STROKE_COMPLETION).listen((strokes) {
       _currentSketch = SketchFile(
         (b) => b..strokes = strokes.toBuilder(),
       );
+      print('SAVE SKETCH');
       saveToFile();
     });
   }
