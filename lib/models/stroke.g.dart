@@ -6,6 +6,66 @@ part of 'stroke.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<Stroke> _$strokeSerializer = new _$StrokeSerializer();
+
+class _$StrokeSerializer implements StructuredSerializer<Stroke> {
+  @override
+  final Iterable<Type> types = const [Stroke, _$Stroke];
+  @override
+  final String wireName = 'Stroke';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, Stroke object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'locations',
+      serializers.serialize(object.locations,
+          specifiedType: const FullType(
+              BuiltList, const [const FullType(TouchLocationEvent)])),
+      'strokeWidth',
+      serializers.serialize(object.strokeWidth,
+          specifiedType: const FullType(double)),
+      'color',
+      serializers.serialize(object.color,
+          specifiedType: const FullType(ColorChangeEvent)),
+    ];
+
+    return result;
+  }
+
+  @override
+  Stroke deserialize(Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new StrokeBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'locations':
+          result.locations.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(TouchLocationEvent)]))
+              as BuiltList<TouchLocationEvent>);
+          break;
+        case 'strokeWidth':
+          result.strokeWidth = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'color':
+          result.color.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(ColorChangeEvent))
+              as ColorChangeEvent);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$Stroke extends Stroke {
   @override
   final BuiltList<TouchLocationEvent> locations;

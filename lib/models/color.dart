@@ -1,4 +1,5 @@
 import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'draw_event.dart';
 
 // Generated code part of this Built Value.
@@ -10,6 +11,9 @@ abstract class ColorChangeEvent
   int get red;
   int get green;
   int get blue;
+
+  static Serializer<ColorChangeEvent> get serializer =>
+      _$colorChangeEventSerializer;
 
   ColorChangeEvent._();
   factory ColorChangeEvent([void Function(ColorChangeEventBuilder) updates]) =

@@ -6,6 +6,55 @@ part of 'stroke_width.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<StrokeWidthChangeEvent> _$strokeWidthChangeEventSerializer =
+    new _$StrokeWidthChangeEventSerializer();
+
+class _$StrokeWidthChangeEventSerializer
+    implements StructuredSerializer<StrokeWidthChangeEvent> {
+  @override
+  final Iterable<Type> types = const [
+    StrokeWidthChangeEvent,
+    _$StrokeWidthChangeEvent
+  ];
+  @override
+  final String wireName = 'StrokeWidthChangeEvent';
+
+  @override
+  Iterable<Object> serialize(
+      Serializers serializers, StrokeWidthChangeEvent object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'width',
+      serializers.serialize(object.width,
+          specifiedType: const FullType(double)),
+    ];
+
+    return result;
+  }
+
+  @override
+  StrokeWidthChangeEvent deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new StrokeWidthChangeEventBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'width':
+          result.width = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$StrokeWidthChangeEvent extends StrokeWidthChangeEvent {
   @override
   final double width;

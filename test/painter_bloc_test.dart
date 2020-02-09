@@ -1,4 +1,6 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/services/preferences_service.dart';
 import 'package:test/test.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
@@ -7,7 +9,17 @@ import 'package:sketchnotes2/models/end_touch.dart';
 import 'package:sketchnotes2/models/touch_location.dart';
 import 'package:sketchnotes2/models/stroke_width.dart';
 
+import 'stroke_maker.dart';
+
 void main() {
+  test('initialise PainterBloc with existing list of strokes', () {
+    final testStroke1 = makeStroke(5, 6, 7, 7, 10, 20);
+    final testStrokes = BuiltList<Stroke>(<Stroke>[testStroke1]);
+    final painterBloc = PainterBloc(strokes: testStrokes);
+
+    expect(painterBloc.strokes.value, testStrokes);
+  });
+
   test('Simple stroke', () {
     final painterBloc = PainterBloc();
     painterBloc.drawEvent.add(TouchLocationEvent((builder) {

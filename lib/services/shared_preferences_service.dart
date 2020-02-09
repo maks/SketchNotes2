@@ -10,31 +10,31 @@ class SharedPreferencesService implements PreferencesService {
   static const PEN_COLOR_KEY = 'pen.color';
   final Logger log = Logger('SharedPreferencesService');
 
-  final SharedPreferences prefs;
+  final SharedPreferences _prefs;
 
-  SharedPreferencesService(this.prefs);
+  SharedPreferencesService(SharedPreferences prefs) : _prefs = prefs;
 
   @override
   double get penSize {
-    if (prefs == null) {
+    if (_prefs == null) {
       LOG.e('MISSING SHARED PREFS');
     }
-    final prefValue = prefs?.getDouble(PEN_WIDTH_KEY);
+    final prefValue = _prefs?.getDouble(PEN_WIDTH_KEY);
     return prefValue ?? 1;
   }
 
   @override
   Future<bool> savePenSize(double size) async =>
-      prefs.setDouble(PEN_WIDTH_KEY, size);
+      _prefs.setDouble(PEN_WIDTH_KEY, size);
 
   @override
   Future<bool> savePenColor(int red, int green, int blue) {
-    return prefs.setString(PEN_COLOR_KEY, '$red,$green,$blue');
+    return _prefs.setString(PEN_COLOR_KEY, '$red,$green,$blue');
   }
 
   @override
   List<int> get penColor =>
-      prefs
+      _prefs
           ?.getString(PEN_COLOR_KEY)
           ?.split(',')
           ?.map((s) => int.parse(s))

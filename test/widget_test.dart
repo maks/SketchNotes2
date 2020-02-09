@@ -6,10 +6,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sketchnotes2/app.dart';
+import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import './color_dialog_tester.dart';
 import './width_dialog_tester.dart';
+
+class MockSketchBloc extends Mock implements SketchBloc {}
 
 void main() {
   setUp(() async {
@@ -17,15 +22,31 @@ void main() {
     await SharedPreferences.getInstance();
   });
 
-  Future<void> _initApp(WidgetTester tester) async {
+  Future<void> _initApp(WidgetTester tester, {SketchBloc sketchBloc}) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(DrawApp());
+    await tester.pumpWidget(Provider<SketchBloc>(
+      child: DrawApp(),
+      create: (BuildContext context) => sketchBloc,
+    ));
     // need 2nd pump to get DrawApps future builder to resolve future value
     await tester.pump();
   }
 
+  testWidgets('show progress while loading', (tester) async {
+    final bloc = MockSketchBloc();
+
+    // dont use _initApp as for this we *dont* want the future to complete yet
+    await tester.pumpWidget(Provider<SketchBloc>(
+      child: DrawApp(),
+      create: (BuildContext context) => bloc,
+    ));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
   testWidgets('Clicking brush FAB displays mini fabs', (tester) async {
-    await _initApp(tester);
+    final bloc = MockSketchBloc();
+    await _initApp(tester, sketchBloc: bloc);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -42,7 +63,8 @@ void main() {
   });
 
   testWidgets('Clicking brush FAB twice hides mini fabs', (tester) async {
-    await _initApp(tester);
+    final bloc = MockSketchBloc();
+    await _initApp(tester, sketchBloc: bloc);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -63,7 +85,8 @@ void main() {
 
   testWidgets('Clicking the lens icon brings up the Brush thickness panel',
       (tester) async {
-    await _initApp(tester);
+    final bloc = MockSketchBloc();
+    await _initApp(tester, sketchBloc: bloc);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 
@@ -88,7 +111,8 @@ void main() {
 
   testWidgets('Clicking the color lens icon brings up the Brush color panel',
       (tester) async {
-    await _initApp(tester);
+    final bloc = MockSketchBloc();
+    await _initApp(tester, sketchBloc: bloc);
 
     expect(find.byIcon(Icons.brush), findsOneWidget);
 

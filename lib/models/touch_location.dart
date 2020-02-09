@@ -1,4 +1,5 @@
 import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import './draw_event.dart';
 
 // Generated code part of this Built Value.
@@ -9,6 +10,9 @@ abstract class TouchLocationEvent
     implements Built<TouchLocationEvent, TouchLocationEventBuilder>, DrawEvent {
   double get x;
   double get y;
+
+  static Serializer<TouchLocationEvent> get serializer =>
+      _$touchLocationEventSerializer;
 
   TouchLocationEvent._();
   factory TouchLocationEvent(
