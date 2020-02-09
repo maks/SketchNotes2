@@ -5,13 +5,12 @@ import 'package:built_collection/built_collection.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
-import 'package:sketchnotes2/models/color.dart';
 import 'package:sketchnotes2/models/sketch.dart';
 import 'package:sketchnotes2/models/stroke.dart';
-import 'package:sketchnotes2/models/touch_location.dart';
 import 'package:sketchnotes2/serializers.dart';
 import 'package:sketchnotes2/services/file_service.dart';
 import 'package:test/test.dart';
+import 'stroke_maker.dart';
 
 void main() {
   setUp(() {
@@ -25,16 +24,11 @@ void main() {
   group('sketch serialisation', () {
     test('read persisted file when sketchbloc created', () async {
       final mockFileService = MockFileService();
-      final strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
 
       when(mockFileService.loadFromFileAsString(any))
           .thenAnswer((_) => Future.value(''));
 
-      final testBloc = await SketchBloc.build(
-        strokes: strokesSubject,
-        fileService: mockFileService,
-        strokesSink: strokesSubject.sink,
-      );
+      final testBloc = await SketchBloc(mockFileService);
 
       expect(testBloc, isA<SketchBloc>());
     });
@@ -46,13 +40,11 @@ void main() {
       when(mockFileService.loadFromFileAsString(any))
           .thenAnswer((_) => Future.value(''));
 
-      final testBloc = await SketchBloc.build(
-        strokes: strokesSubject,
-        fileService: mockFileService,
-        strokesSink: strokesSubject.sink,
-      );
+      final testBloc = await SketchBloc(mockFileService);
 
-      final stroke1 = _makeStroke(5, 10, 20, 90, 25, 35);
+      testBloc.strokesStream = strokesSubject;
+
+      final stroke1 = makeStroke(5, 10, 20, 90, 25, 35);
       final strokes = (BuiltList<Stroke>().toBuilder()..add(stroke1)).build();
 
       strokesSubject.sink.add(strokes);
@@ -61,8 +53,7 @@ void main() {
       // but emitsThrough won't consume it, allowing the Bloc to consume it
       await expectLater(strokesSubject.stream, emitsThrough(strokes));
 
-      expect(testBloc.sketchFile, isNotNull);
-      expect(testBloc.sketchFile.strokes, strokes);
+      expect(testBloc.strokes, strokes);
     });
 
     test('persist strokes', () async {
@@ -71,12 +62,10 @@ void main() {
       when(mockFileService.loadFromFileAsString(any))
           .thenAnswer((_) => Future.value(''));
 
-      final testBloc = await SketchBloc.build(
-        strokes: strokesSubject,
-        fileService: mockFileService,
-        strokesSink: strokesSubject.sink,
-      );
-      final stroke1 = _makeStroke(5, 10, 20, 90, 25, 35);
+      final testBloc = await SketchBloc(mockFileService);
+      testBloc.strokesStream = strokesSubject;
+
+      final stroke1 = makeStroke(5, 10, 20, 90, 25, 35);
       final strokes = (BuiltList<Stroke>().toBuilder()..add(stroke1)).build();
 
       strokesSubject.sink.add(strokes);
@@ -99,7 +88,7 @@ void main() {
         bytes: anyNamed('bytes'),
         fileName: 'sketch.json',
         text: captureAnyNamed('text'),
-      )).captured.single.toString();
+      )).captured.first.toString();
       expect(collapseWhitespace(jsonPersisted), collapseWhitespace(json));
     });
 
@@ -115,31 +104,6 @@ void main() {
       expect(sketch.strokes[0].locations[0].y, 225.90476190476193);
     });
   });
-}
-
-Stroke _makeStroke(
-    double width, int red, int green, int blue, double dx, double dy) {
-  final ColorChangeEvent color = (ColorChangeEventBuilder()
-        ..red = 0
-        ..green = 0
-        ..blue = 0)
-      .build();
-  final drawEvent = TouchLocationEvent((builder) {
-    builder
-      ..x = dx
-      ..y = dy;
-  });
-  BuiltList<TouchLocationEvent> locations = BuiltList<TouchLocationEvent>();
-  locations = (locations.toBuilder()..add(drawEvent)).build();
-
-  return Stroke(
-    (strokeBuilder) {
-      strokeBuilder
-        ..strokeWidth = width
-        ..color = color.toBuilder()
-        ..locations = locations.toBuilder();
-    },
-  );
 }
 
 class MockFileService extends Mock implements FileService {}

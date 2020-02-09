@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
-import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/dialogs/color_dialog.dart';
 import 'package:sketchnotes2/dialogs/width_dialog.dart';
 import 'package:sketchnotes2/models/clear.dart';
@@ -15,7 +14,6 @@ import 'package:sketchnotes2/models/end_touch.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/models/stroke_width.dart';
 import 'package:sketchnotes2/models/touch_location.dart';
-import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/strokes_painter.dart';
 
 class DrawPage extends StatefulWidget {
@@ -30,7 +28,6 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
 
   final GlobalKey _globalKey = GlobalKey();
   PainterBloc _bloc;
-  SketchBloc _sketchBloc;
 
   @override
   void initState() {
@@ -56,17 +53,11 @@ class DrawPageState extends State<DrawPage> with TickerProviderStateMixin {
     final bloc = Provider.of<PainterBloc>(context);
     if (bloc != this._bloc) {
       _bloc = bloc;
-      _sketchBloc = await SketchBloc.build(
-        fileService: FileService(),
-        strokes: _bloc.strokes,
-        strokesSink: _bloc.strokesOut,
-      );
     }
   }
 
   @override
   void dispose() {
-    _sketchBloc?.dispose();
     super.dispose();
   }
 

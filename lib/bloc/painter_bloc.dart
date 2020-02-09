@@ -35,7 +35,7 @@ class PainterBloc extends BlocBase {
 
   // Streamed outputs from this BLoC
   final _strokesSubject = BehaviorSubject<BuiltList<Stroke>>();
-  StreamSink<BuiltList<Stroke>> get strokesOut => _strokesSubject.sink;
+  StreamSink<BuiltList<Stroke>> get _strokesOut => _strokesSubject.sink;
   ValueObservable<BuiltList<Stroke>> get strokes => _strokesSubject.stream;
 
   final _colorSubject = BehaviorSubject<ColorChangeEvent>();
@@ -46,9 +46,13 @@ class PainterBloc extends BlocBase {
   StreamSink<double> get _widthOut => _widthSubject.sink;
   ValueObservable<double> get width => _widthSubject.stream;
 
-  PainterBloc({PreferencesService preferences}) : _preferences = preferences {
+  PainterBloc({PreferencesService preferences, BuiltList<Stroke> strokes})
+      : _preferences = preferences {
+    if (strokes != null) {
+      _strokes = strokes;
+    }
     // Publish initial state
-    strokesOut.add(_strokes);
+    _strokesOut.add(_strokes);
 
     if (preferences != null) {
       _initFromPreferences();
@@ -63,7 +67,7 @@ class PainterBloc extends BlocBase {
       if (drawEvent is ClearEvent) {
         _strokes = BuiltList<Stroke>();
         _locations = BuiltList<TouchLocationEvent>();
-        strokesOut.add(_strokes);
+        _strokesOut.add(_strokes);
       } else if (drawEvent is ColorChangeEvent) {
         finalizeCurrentStroke();
         _color = drawEvent;
@@ -76,7 +80,7 @@ class PainterBloc extends BlocBase {
       } else if (drawEvent is TouchLocationEvent) {
         _locations = (_locations.toBuilder()..add(drawEvent)).build();
         final allStrokes = (_strokes.toBuilder()..add(_stroke)).build();
-        strokesOut.add(allStrokes);
+        _strokesOut.add(allStrokes);
       } else if (drawEvent is EndTouchEvent) {
         finalizeCurrentStroke();
       } else if (drawEvent is StrokeWidthChangeEvent) {
@@ -106,7 +110,7 @@ class PainterBloc extends BlocBase {
   void finalizeCurrentStroke() {
     if (_locations.isNotEmpty) {
       _strokes = (_strokes.toBuilder()..add(_stroke)).build();
-      strokesOut.add(_strokes);
+      _strokesOut.add(_strokes);
       _locations = BuiltList<TouchLocationEvent>();
     }
   }
