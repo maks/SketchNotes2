@@ -24,6 +24,12 @@ void main() {
     await tester.pump();
   }
 
+  testWidgets('show progress while loading', (tester) async {
+    await _initApp(tester);
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
   testWidgets('Clicking brush FAB displays mini fabs', (tester) async {
     await _initApp(tester);
 
