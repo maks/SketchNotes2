@@ -8,14 +8,12 @@ import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
 import 'package:sketchnotes2/models/stroke.dart';
-import 'package:sketchnotes2/services/file_service.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
 
 class DrawApp extends StatelessWidget {
-  final _sketchBloc = SketchBloc(FileService());
-
   @override
   Widget build(BuildContext context) {
+    final _sketchBloc = Provider.of<SketchBloc>(context);
     return MaterialApp(
       title: 'SketchNotes',
       home: Scaffold(
@@ -23,7 +21,7 @@ class DrawApp extends StatelessWidget {
           title: Text('SketchNotes'),
         ),
         body: FutureBuilder<PainterBloc>(
-            future: _painterBloc(_sketchBloc.strokes),
+            future: _painterBloc(_sketchBloc.strokes, _sketchBloc),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final bloc = snapshot.data;
@@ -41,13 +39,14 @@ class DrawApp extends StatelessWidget {
     );
   }
 
-  Future<PainterBloc> _painterBloc(Future<BuiltList<Stroke>> strokes) async {
+  Future<PainterBloc> _painterBloc(
+      Future<BuiltList<Stroke>> strokes, SketchBloc sketchBloc) async {
     final painterBloc = PainterBloc(
       preferences:
           SharedPreferencesService(await SharedPreferences.getInstance()),
       strokes: await strokes,
     );
-    _sketchBloc.strokesStream = painterBloc.strokes;
+    sketchBloc.strokesStream = painterBloc.strokes;
     return painterBloc;
   }
 }

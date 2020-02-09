@@ -53,7 +53,7 @@ void main() {
       // but emitsThrough won't consume it, allowing the Bloc to consume it
       await expectLater(strokesSubject.stream, emitsThrough(strokes));
 
-      expect(testBloc.strokes, strokes);
+      expect(await testBloc.strokes, strokes);
     });
 
     test('persist strokes', () async {
