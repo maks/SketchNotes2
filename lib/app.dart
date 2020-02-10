@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
+import 'package:sketchnotes2/drawer/drawer.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
 
@@ -51,40 +52,5 @@ class DrawApp extends StatelessWidget {
     );
     sketchBloc.strokesStream = painterBloc.strokes;
     return painterBloc;
-  }
-}
-
-class DrawerContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.red,
-            ),
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                      onPressed: null),
-                  IconButton(
-                      icon: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      onPressed: null),
-                ],
-              ),
-            )),
-      ],
-    );
   }
 }
