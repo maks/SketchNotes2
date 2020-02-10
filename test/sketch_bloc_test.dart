@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:built_collection/built_collection.dart';
 import 'package:mockito/mockito.dart';
-import 'package:fake_async/fake_async.dart';
+import 'package:quiver/testing/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/models/sketch.dart';

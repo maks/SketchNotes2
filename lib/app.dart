@@ -4,11 +4,14 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sketchnotes2/appbar.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
+import 'package:sketchnotes2/drawer/drawer.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
+import 'package:sketchnotes2/theme.dart';
 
 class DrawApp extends StatelessWidget {
   @override
@@ -16,9 +19,11 @@ class DrawApp extends StatelessWidget {
     final _sketchBloc = Provider.of<SketchBloc>(context);
     return MaterialApp(
       title: 'SketchNotes',
+      theme: APP_THEME,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('SketchNotes'),
+        appBar: customAppBar,
+        drawer: Drawer(
+          child: DrawerContent(),
         ),
         body: FutureBuilder<PainterBloc>(
             future: _painterBloc(_sketchBloc.strokes, _sketchBloc),
