@@ -20,6 +20,9 @@ class DrawApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('SketchNotes'),
         ),
+        drawer: Drawer(
+          child: DrawerContent(),
+        ),
         body: FutureBuilder<PainterBloc>(
             future: _painterBloc(_sketchBloc.strokes, _sketchBloc),
             builder: (context, snapshot) {
@@ -48,5 +51,40 @@ class DrawApp extends StatelessWidget {
     );
     sketchBloc.strokesStream = painterBloc.strokes;
     return painterBloc;
+  }
+}
+
+class DrawerContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(0),
+      children: <Widget>[
+        Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.red,
+            ),
+            child: SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                      icon: Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                      ),
+                      onPressed: null),
+                  IconButton(
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      onPressed: null),
+                ],
+              ),
+            )),
+      ],
+    );
   }
 }
