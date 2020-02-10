@@ -5,7 +5,7 @@ final APP_THEME = ThemeData(
 );
 
 abstract class APP_COLORS {
-  static const drawerIconColor = Colors.white;
+  static const iconColor = Colors.white;
   static const drawerHeaderColor = Colors.red;
 }
 

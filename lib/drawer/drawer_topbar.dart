@@ -10,13 +10,13 @@ class DrawerTopbar extends StatelessWidget {
         IconButton(
             icon: Icon(
               Icons.settings,
-              color: APP_COLORS.drawerIconColor,
+              color: APP_COLORS.iconColor,
             ),
             onPressed: null),
         IconButton(
             icon: Icon(
               Icons.add,
-              color: APP_COLORS.drawerIconColor,
+              color: APP_COLORS.iconColor,
             ),
             onPressed: null),
       ],

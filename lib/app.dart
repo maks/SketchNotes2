@@ -4,6 +4,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sketchnotes2/appbar.dart';
 import 'package:sketchnotes2/bloc/painter_bloc.dart';
 import 'package:sketchnotes2/bloc/sketch_bloc.dart';
 import 'package:sketchnotes2/draw_page.dart';
@@ -20,9 +21,7 @@ class DrawApp extends StatelessWidget {
       title: 'SketchNotes',
       theme: APP_THEME,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('SketchNotes'),
-        ),
+        appBar: customAppBar,
         drawer: Drawer(
           child: DrawerContent(),
         ),
