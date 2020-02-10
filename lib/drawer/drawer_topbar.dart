@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sketchnotes2/theme.dart';
 
 class DrawerTopbar extends StatelessWidget {
   @override
@@ -9,13 +10,13 @@ class DrawerTopbar extends StatelessWidget {
         IconButton(
             icon: Icon(
               Icons.settings,
-              color: Colors.white,
+              color: APP_COLORS.drawerIconColor,
             ),
             onPressed: null),
         IconButton(
             icon: Icon(
               Icons.add,
-              color: Colors.white,
+              color: APP_COLORS.drawerIconColor,
             ),
             onPressed: null),
       ],

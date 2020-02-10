@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sketchnotes2/theme.dart';
 import 'drawer_topbar.dart';
 
 class DrawerContent extends StatelessWidget {
@@ -8,9 +9,9 @@ class DrawerContent extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       children: <Widget>[
         Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(DIMENS.margin),
             decoration: BoxDecoration(
-              color: Colors.red,
+              color: APP_COLORS.drawerHeaderColor,
             ),
             child: SafeArea(
               child: DrawerTopbar(),

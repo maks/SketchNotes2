@@ -10,6 +10,7 @@ import 'package:sketchnotes2/draw_page.dart';
 import 'package:sketchnotes2/drawer/drawer.dart';
 import 'package:sketchnotes2/models/stroke.dart';
 import 'package:sketchnotes2/services/shared_preferences_service.dart';
+import 'package:sketchnotes2/theme.dart';
 
 class DrawApp extends StatelessWidget {
   @override
@@ -17,6 +18,7 @@ class DrawApp extends StatelessWidget {
     final _sketchBloc = Provider.of<SketchBloc>(context);
     return MaterialApp(
       title: 'SketchNotes',
+      theme: APP_THEME,
       home: Scaffold(
         appBar: AppBar(
           title: Text('SketchNotes'),
