@@ -6,11 +6,14 @@ import 'package:path/path.dart' as p;
 import 'package:sketchnotes2/logging.dart';
 
 class FileService {
-  Future<Directory> get _storageDirectory => getApplicationDocumentsDirectory();
+  Future<Directory> get _dataDirectory => getApplicationDocumentsDirectory();
+  Directory get _storageDirectory =>
+      Directory('/data/data/com.manichord.sketchnotes/files');
 
-  Future<void> saveToFile(
+  Future<void> saveToDataFile(
       {String fileName, Uint8List bytes, String text}) async {
-    final directory = await _storageDirectory;
+    final directory = await _dataDirectory;
+    print('DATA IS: $directory');
     final path = p.join(directory.path, fileName);
     final output = File(path);
     if (text != null) {
@@ -35,8 +38,17 @@ class FileService {
     return bytes;
   }
 
+  Future<List<String>> listStorage() async {
+    final files = _storageDirectory.list();
+    return files.map((f) {
+      LOG.d('storage FILE: $f');
+      return f.path;
+    }).toList();
+  }
+
   Future<File> _file(String fileName) async {
-    final directory = await _storageDirectory;
+    final directory = await _dataDirectory;
+    print('DATA IS: $directory');
     final path = p.join(directory.path, fileName);
     return File(path);
   }

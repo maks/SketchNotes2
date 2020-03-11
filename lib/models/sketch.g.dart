@@ -22,6 +22,9 @@ class _$SketchFileSerializer implements StructuredSerializer<SketchFile> {
       serializers.serialize(object.strokes,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Stroke)])),
+      'sketchName',
+      serializers.serialize(object.sketchName,
+          specifiedType: const FullType(String)),
     ];
 
     return result;
@@ -44,6 +47,10 @@ class _$SketchFileSerializer implements StructuredSerializer<SketchFile> {
                       const FullType(BuiltList, const [const FullType(Stroke)]))
               as BuiltList<Stroke>);
           break;
+        case 'sketchName':
+          result.sketchName = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -54,13 +61,18 @@ class _$SketchFileSerializer implements StructuredSerializer<SketchFile> {
 class _$SketchFile extends SketchFile {
   @override
   final BuiltList<Stroke> strokes;
+  @override
+  final String sketchName;
 
   factory _$SketchFile([void Function(SketchFileBuilder) updates]) =>
       (new SketchFileBuilder()..update(updates)).build();
 
-  _$SketchFile._({this.strokes}) : super._() {
+  _$SketchFile._({this.strokes, this.sketchName}) : super._() {
     if (strokes == null) {
       throw new BuiltValueNullFieldError('SketchFile', 'strokes');
+    }
+    if (sketchName == null) {
+      throw new BuiltValueNullFieldError('SketchFile', 'sketchName');
     }
   }
 
@@ -74,17 +86,21 @@ class _$SketchFile extends SketchFile {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is SketchFile && strokes == other.strokes;
+    return other is SketchFile &&
+        strokes == other.strokes &&
+        sketchName == other.sketchName;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, strokes.hashCode));
+    return $jf($jc($jc(0, strokes.hashCode), sketchName.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('SketchFile')..add('strokes', strokes))
+    return (newBuiltValueToStringHelper('SketchFile')
+          ..add('strokes', strokes)
+          ..add('sketchName', sketchName))
         .toString();
   }
 }
@@ -97,11 +113,16 @@ class SketchFileBuilder implements Builder<SketchFile, SketchFileBuilder> {
       _$this._strokes ??= new ListBuilder<Stroke>();
   set strokes(ListBuilder<Stroke> strokes) => _$this._strokes = strokes;
 
+  String _sketchName;
+  String get sketchName => _$this._sketchName;
+  set sketchName(String sketchName) => _$this._sketchName = sketchName;
+
   SketchFileBuilder();
 
   SketchFileBuilder get _$this {
     if (_$v != null) {
       _strokes = _$v.strokes?.toBuilder();
+      _sketchName = _$v.sketchName;
       _$v = null;
     }
     return this;
@@ -124,7 +145,8 @@ class SketchFileBuilder implements Builder<SketchFile, SketchFileBuilder> {
   _$SketchFile build() {
     _$SketchFile _$result;
     try {
-      _$result = _$v ?? new _$SketchFile._(strokes: strokes.build());
+      _$result = _$v ??
+          new _$SketchFile._(strokes: strokes.build(), sketchName: sketchName);
     } catch (_) {
       String _$failedField;
       try {

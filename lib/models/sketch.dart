@@ -12,6 +12,7 @@ part 'sketch.g.dart';
 
 abstract class SketchFile implements Built<SketchFile, SketchFileBuilder> {
   BuiltList<Stroke> get strokes;
+  String get sketchName;
 
   SketchFile._();
 
