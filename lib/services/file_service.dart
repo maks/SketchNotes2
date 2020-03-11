@@ -41,7 +41,7 @@ class FileService {
   Future<List<String>> listStorage() async {
     final files = _storageDirectory.list();
     return files.map((f) {
-      print('FILE: $f');
+      LOG.d('storage FILE: $f');
       return f.path;
     }).toList();
   }

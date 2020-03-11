@@ -24,18 +24,21 @@ class DrawerContent extends StatelessWidget {
             )),
         FutureBuilder<List<File>>(
           future: sb.listSketches(),
+          initialData: [],
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Expanded(
-                child: ListView.builder(
+                child: GridView.builder(
                   itemCount: snapshot.data.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
                   itemBuilder: (context, index) {
                     return Image.file(snapshot.data[index]);
                   },
                 ),
               );
             } else {
-              CircularProgressIndicator();
+              return CircularProgressIndicator();
             }
           },
         ),
