@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -58,8 +59,18 @@ class SketchBloc extends BlocBase {
 
   Future<void> saveToFile() {
     if (fileService != null) {
-      return fileService.saveToFile(
+      return fileService.saveToDataFile(
           fileName: FILE_NAME, text: _currentSketch?.toJson());
+    } else {
+      LOG.e('No FileService available, cannot save file: $FILE_NAME');
+      return Future.value(null);
+    }
+  }
+
+  Future<List<File>> listSketches() async {
+    if (fileService != null) {
+      final f = await fileService.listStorage();
+      return f.where((s) => s.endsWith('.png')).map(((s) => File(s))).toList();
     } else {
       LOG.e('No FileService available, cannot save file: $FILE_NAME');
       return Future.value(null);
@@ -71,13 +82,20 @@ class SketchBloc extends BlocBase {
       LOG.e('No FileService available, cannot load file: $FILE_NAME');
       return Future.value(null);
     }
-    final loadedData = await fileService.loadFromFileAsString(FILE_NAME);
+    String loadedData;
+    try {
+      loadedData = await fileService.loadFromFileAsString(FILE_NAME);
+    } catch (e) {
+      LOG.e(e);
+    }
     if (loadedData != null && loadedData.isNotEmpty) {
       _currentSketch = serializers.deserializeWith<SketchFile>(
           SketchFile.serializer, json.decode(loadedData));
     } else {
       _currentSketch = SketchFile(
-        (b) => b..strokes = BuiltList<Stroke>(<Stroke>[]).toBuilder(),
+        (b) => b
+          ..strokes = BuiltList<Stroke>(<Stroke>[]).toBuilder()
+          ..sketchName = DEFAULT_SKETCH_NAME,
       );
       LOG.w('no stored sketch file data - blank sketch created');
     }

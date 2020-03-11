@@ -87,7 +87,7 @@ void main() {
         final json = r'''
     {"strokes":[{"locations":[{"x":25.0,"y":35.0}],"strokeWidth":5.0,"color":{"red":0,"green":0,"blue":0}}],"sketchName":"sketch"}
     ''';
-        final jsonPersisted = verify(mockFileService.saveToFile(
+        final jsonPersisted = verify(mockFileService.saveToDataFile(
           bytes: anyNamed('bytes'),
           fileName: 'sketch.json',
           text: captureAnyNamed('text'),
@@ -110,7 +110,8 @@ void main() {
 
     test('create new sketch file', () async {
       final mockFileService = MockFileService();
-      when(mockFileService.saveToFile()).thenAnswer((_) => Future.value(null));
+      when(mockFileService.saveToDataFile())
+          .thenAnswer((_) => Future.value(null));
 
       final testBloc = SketchBloc(mockFileService);
       await testBloc.newFile();
