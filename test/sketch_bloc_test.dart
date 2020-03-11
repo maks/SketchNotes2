@@ -22,7 +22,7 @@ void main() {
     }
   });
 
-  group('sketch serialisation', () {
+  group('sketch serialisation:', () {
     test('read persisted file when sketchbloc created', () async {
       final mockFileService = MockFileService();
 
@@ -85,7 +85,7 @@ void main() {
         testBloc.saveToFile();
 
         final json = r'''
-    {"strokes":[{"locations":[{"x":25.0,"y":35.0}],"strokeWidth":5.0,"color":{"red":0,"green":0,"blue":0}}]}
+    {"strokes":[{"locations":[{"x":25.0,"y":35.0}],"strokeWidth":5.0,"color":{"red":0,"green":0,"blue":0}}],"sketchName":"sketch"}
     ''';
         final jsonPersisted = verify(mockFileService.saveToFile(
           bytes: anyNamed('bytes'),
@@ -106,6 +106,17 @@ void main() {
       expect(sketch.strokes[0].locations.length, 4);
       expect(sketch.strokes[0].locations[0].x, 215.23809523809524);
       expect(sketch.strokes[0].locations[0].y, 225.90476190476193);
+    });
+
+    test('create new sketch file', () async {
+      final mockFileService = MockFileService();
+      when(mockFileService.saveToFile()).thenAnswer((_) => Future.value(null));
+
+      final testBloc = SketchBloc(mockFileService);
+      await testBloc.newFile();
+
+      expect(testBloc.sketchName, isNotNull);
+      expect(testBloc.sketchName, startsWith('sketch'));
     });
   });
 }
